@@ -1,6 +1,9 @@
 import { Table, Tooltip } from "antd";
 import React, { useState } from "react";
-import { getListCustomerAction } from "../../store/customer/customer.actions";
+import {
+  getListCustomerAction,
+  handleSearchCustomer,
+} from "../../store/customer/customer.actions";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +16,7 @@ const Customer = () => {
   const [isRequestFormCreateOpen, setAddRequestFormCreateOpen] =
     useState(false);
   const [isLoadData, setIsLoadData] = useState(false);
-
+  const [content, setContent] = useState("");
   const [page, setPage] = useState(1);
   const [pageNumber, setPageNumber] = useState(10);
 
@@ -36,34 +39,34 @@ const Customer = () => {
   };
 
   const columns = [
-    {
-      title: "#",
-      dataIndex: "index",
-      key: "index",
-      width: 50,
-      align: "center",
-      render: (item) => pageNumber * (page - 1) + item,
-    },
+    // {
+    //   title: "#",
+    //   dataIndex: "index",
+    //   key: "index",
+    //   width: 50,
+    //   align: "center",
+    //   render: (item) => pageNumber * (page - 1) + item,
+    // },
     {
       title: "Full Name",
-      key: "name",
+      key: "fullname",
       align: "center",
       width: 150,
-      render: (item) => item?.createdUserDTO?.fullName,
+      render: (item) => item?.fullName,
     },
     {
       title: "Date of Birth",
       key: "dob",
       align: "center",
       width: 150,
-      render: (item) => item?.requestTypeDTO?.name,
+      render: (item) => item?.dob,
     },
     {
       title: "Email",
       key: "email",
       align: "center",
       width: 150,
-      render: (item) => item?.requestTypeDTO?.name,
+      render: (item) => item?.email,
     },
     {
       title: "Thao tác",
@@ -105,6 +108,21 @@ const Customer = () => {
     []
   );
 
+  const handleChangeValueSeach = useCallback((value) => {
+    console.log("value", value);
+    setContent(value);
+    // truyen value vao api search
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    console.log(content);
+    const payload = {
+      content,
+    };
+    dispatch(handleSearchCustomer(payload));
+    // call api search
+  }, [content, dispatch]);
+
   return (
     <div className="main-content-container container-fluid px-4">
       <div className="page-header row no-gutters py-4 d-flex justify-content-between">
@@ -119,7 +137,20 @@ const Customer = () => {
           </button>
         </div>
       </div>
-
+      <div className="my-3 d-flex">
+        <input
+          placeholder="search"
+          onChange={(e) => handleChangeValueSeach(e.currentTarget.value)}
+        />
+        <button
+          onClick={handleSearch}
+          className="mr-1 btn btn-primary btn-sm"
+          disabled={!content}
+          style={{ fontSize: "15px" }}
+        >
+          Search
+        </button>
+      </div>
       <Table
         style={{ fontSize: "12px !important" }}
         columns={columns}

@@ -6,3 +6,10 @@ export function getListCustomerAction(payload) {
     payload,
   };
 }
+
+export function handleSearchCustomer(payload) {
+  return {
+    type: constants.GET_LIST_CUSTOMER_REQUEST_START,
+    payload,
+  };
+}

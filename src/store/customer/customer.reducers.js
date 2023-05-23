@@ -29,6 +29,25 @@ function CustomerReducer(state = INIT_STATE, action) {
         disabledButton: false,
       };
 
+    case constants.SEARCH_CUSTOMER_REQUEST_START:
+      return { ...state, disabledButton: true };
+
+    case constants.SEARCH_CUSTOMER_REQUEST_SUCCEEDED:
+      return {
+        ...state,
+        listCustomer: action.data,
+        pageSize: action.pageSize,
+        pageNumber: action.pageNumber,
+        totalResults: action.totalResults,
+        disabledButton: false,
+      };
+
+    case constants.SEARCH_CUSTOMER_REQUEST_FAILED:
+      return {
+        ...state,
+        disabledButton: false,
+      };
+
     default:
       return state;
   }
